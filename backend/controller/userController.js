@@ -80,3 +80,9 @@ export const LoginUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid Credentials!!');
   }
 });
+
+export const getMe = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    message: 'this is me',
+  });
+});
