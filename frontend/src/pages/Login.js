@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaSignInAlt } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
+import { login, reset } from '../features/auth/authSlice';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess || user) {
+      navigate('/');
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, user, navigate, message, dispatch]);
 
   const { email, password } = formData;
 
@@ -24,9 +45,11 @@ const Login = () => {
     if (!password) {
       toast.error('Invalid Credentials');
     } else {
-      toast.success('Login successfully!!');
-      const data = formData;
-      console.log(JSON.stringify(data));
+      const userData = {
+        email,
+        password,
+      };
+      dispatch(login(userData));
     }
   };
 
