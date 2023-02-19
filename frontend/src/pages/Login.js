@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
 import { login, reset } from '../features/auth/authSlice';
 
 const Login = () => {
@@ -52,6 +53,10 @@ const Login = () => {
       dispatch(login(userData));
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
