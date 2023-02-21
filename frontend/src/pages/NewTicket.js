@@ -31,7 +31,13 @@ const NewTicket = () => {
       <section className="form">
         <div className="form-group">
           <label htmlFor="name">Customer Name:</label>
-          <input type="text" className="form-control" id="name" value={name} />
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            value={name}
+            readOnly
+          />
           <div className="form-group">
             <label htmlFor="email">Email Address:</label>
             <input
@@ -39,6 +45,7 @@ const NewTicket = () => {
               className="form-control"
               id="email"
               value={email}
+              readOnly
             />
           </div>
 
