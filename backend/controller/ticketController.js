@@ -68,6 +68,7 @@ export const createTickets = asyncHandler(async (req, res) => {
 // update ticket...
 export const updateTicket = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
+
   if (!user) {
     res.status(401);
     throw new Error('User not found!!');
