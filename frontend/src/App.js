@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import NewTicket from './pages/NewTicket';
 import PrivateRoute from './components/PrivateRoute';
 import AllTicket from './pages/AllTicket';
+import SingleTicket from './pages/SingleTicket';
 
 const App = () => {
   return (
@@ -25,6 +26,9 @@ const App = () => {
             </Route>
             <Route path="/tickets" element={<PrivateRoute />}>
               <Route path="/tickets" element={<AllTicket />} />
+            </Route>
+            <Route path="/ticket/:ticketId" element={<PrivateRoute />}>
+              <Route path="/ticket/:ticketId" element={<SingleTicket />} />
             </Route>
           </Routes>
         </div>
