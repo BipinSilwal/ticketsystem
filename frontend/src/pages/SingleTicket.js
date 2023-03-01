@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { FaPlus } from 'react-icons/fa';
 
 import {
   singleTicket,
@@ -10,10 +11,30 @@ import {
 import { toast } from 'react-toastify';
 import Spinner from '../components/Spinner';
 import BackButton from '../components/BackButton';
-import { getNotes } from '../features/notes/noteSlice.js';
+import { getNotes, createNote } from '../features/notes/noteSlice.js';
 import NoteItems from '../components/NoteItems.js';
+import Modal from 'react-modal';
+
+const customStyles = {
+  content: {
+    width: '600px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    position: 'relative',
+  },
+};
+
+Modal.setAppElement('#root');
 
 const SingleTicket = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const [noteText, setNoteText] = useState('');
+
   const { ticketId } = useParams();
 
   const { ticket, isLoading, isSuccess, isError, message } = useSelector(
@@ -51,6 +72,21 @@ const SingleTicket = () => {
     navigate('/');
   };
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const onNoteSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(createNote({ noteText, ticketId }));
+    closeModal();
+  };
+
   return (
     <>
       <div className="ticket-page">
@@ -73,6 +109,42 @@ const SingleTicket = () => {
           </div>
           <h2>Notes</h2>
         </header>
+
+        {ticket.status !== 'closed' && (
+          <button className="btn" onClick={openModal}>
+            <FaPlus /> Add Notes
+          </button>
+        )}
+
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Add Note"
+        >
+          <h2>Add Note</h2>
+          <button className="btn-close" onClick={closeModal}>
+            X
+          </button>
+          <form onSubmit={onNoteSubmit}>
+            <div className="form-group">
+              <textarea
+                name="noteText"
+                id="noteText"
+                className="form-control"
+                placeholder="Note text"
+                value={noteText}
+                onChange={(e) => setNoteText(e.target.value)}
+              ></textarea>
+            </div>
+            <div className="form-group">
+              <button className="btn" type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </Modal>
+
         {notes.map((note) => (
           <NoteItems key={note._id} note={note} />
         ))}
